@@ -1,12 +1,17 @@
+import gui.GUI;
+
 
 public class MainApp {
 
 	/**
-	 * Startup Class of TitelEditor GUI
+	 * Startup Class of TitelEditor
 	 * @param args
+	 * @author Johann Houszka 0625523
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
+		GUI g = new GUI();
+		g.initInterface();
 
 	}
 
