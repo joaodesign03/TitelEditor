@@ -31,7 +31,7 @@ public class GUI extends JFrame implements ActionListener {
 	 * Instantiate user interface variables
 	 */
 	JFrame frame = new JFrame("Titeleditor");
-	JPanel panel_video_big, panel_effects, panel_video, panel_settings, setting_timeline;
+	JPanel panel_video_big, panel_effects, panel_video, panel_settings, setting_timeline, start_panel;
 	JMenuBar menu;
 	JMenu file, options, help;
 	JMenuItem open, save, exit, about;
@@ -87,11 +87,16 @@ public class GUI extends JFrame implements ActionListener {
 		setting_timeline.setPreferredSize(new Dimension(600, 100));
 		setting_timeline.setBorder(BorderFactory.createTitledBorder("Timeline"));
 		
+		start_panel = new JPanel(new GridBagLayout());
+		start_panel.setPreferredSize(new Dimension(600, 50));
+		start_panel.setBorder(BorderFactory.createTitledBorder("Start/Stop"));
+		
 		panel_video_big = new JPanel();
 		//panel_video_big.setPreferredSize(new Dimension(600, 400));
 		panel_video_big.setLayout(new BoxLayout(panel_video_big, BoxLayout.PAGE_AXIS));
 		panel_video_big.add(panel_effects);
 		panel_video_big.add(panel_video);
+		panel_video_big.add(start_panel);
 		
 		frame.add(panel_video_big,BorderLayout.CENTER);
 		frame.add(panel_settings,BorderLayout.EAST);
