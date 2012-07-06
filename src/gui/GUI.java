@@ -3,17 +3,21 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  * Main class for all GUI elements
@@ -35,6 +39,9 @@ public class GUI extends JFrame implements ActionListener {
 	JMenuBar menu;
 	JMenu file, options, help;
 	JMenuItem open, save, exit, about;
+	JButton start, stopp, pause;
+	
+	GridBagConstraints gbc = new GridBagConstraints();
 	
 
 	/**
@@ -70,7 +77,7 @@ public class GUI extends JFrame implements ActionListener {
         frame.add(menu, BorderLayout.NORTH);
 		
 		panel_effects = new JPanel(new GridBagLayout());
-		panel_effects.setBackground(new Color(255, 0, 0));
+		//panel_effects.setBackground(new Color(255, 0, 0));
 		panel_effects.setPreferredSize(new Dimension(600, 100));
 		panel_effects.setBorder(BorderFactory.createTitledBorder("Video Effects"));
 		
@@ -103,6 +110,31 @@ public class GUI extends JFrame implements ActionListener {
 		frame.add(setting_timeline, BorderLayout.PAGE_END);
 		
 		frame.setSize(800, 600);
+		
+		
+		start = new JButton("start");
+		start.setPreferredSize(new Dimension(30,30));
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		start_panel.add(start, gbc);
+		
+		stopp = new JButton("stopp");
+		//start.setPreferredSize(new Dimension(30,30));
+		gbc.gridx = 2;
+		gbc.gridy = 1;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		start_panel.add(stopp, gbc);
+		
+		pause = new JButton("pause");
+		//start.setPreferredSize(new Dimension(30,30));
+		gbc.gridx = 3;
+		gbc.gridy = 1;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		start_panel.add(pause, gbc);
 		
 		//frame.pack();
 		frame.setVisible(true);
