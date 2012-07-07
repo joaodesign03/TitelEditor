@@ -2,21 +2,28 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileFilter;
+
+import com.xuggle.mediatool.IMediaReader;
+import com.xuggle.mediatool.IMediaViewer;
+import com.xuggle.mediatool.IMediaWriter;
+import com.xuggle.mediatool.ToolFactory;
 
 /**
  * Main class for all GUI elements
@@ -207,6 +214,40 @@ public class GUI extends JFrame implements ActionListener {
 		//close application
 		if (object.getSource() == exit){
 			System.exit(0);
+       }
+		if (object.getSource() == open){
+			JFileChooser chooser = new JFileChooser();
+			chooser.addChoosableFileFilter(new FileFilter() {
+			    public boolean accept(File f) {
+			      if (f.isDirectory()) return true;
+			      return f.getName().toLowerCase().endsWith(".mp4");
+			    }
+			    public String getDescription () { return "Video Files"; }  
+			  });
+			  chooser.setMultiSelectionEnabled(false);
+			  if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+			     System.out.println ("Datei "+chooser.getSelectedFile()+" ausgewählt.");
+			  }
+			  
+			// create a media reader
+  	        IMediaReader mediaReader = ToolFactory.makeReader(chooser.getSelectedFile().toString());
+  	         
+  	        // create a media writer
+  	        IMediaWriter mediaWriter = ToolFactory.makeWriter(chooser.getSelectedFile().toString(), mediaReader);
+  	 
+  	        // add a writer to the reader, to create the output file
+  	        mediaReader.addListener(mediaWriter);
+  	         
+  	        // create a media viewer with stats enabled
+  	        IMediaViewer mediaViewer = ToolFactory.makeViewer(true);
+  	         
+  	        // add a viewer to the reader, to see the decoded media
+  	        mediaReader.addListener(mediaViewer);
+  	 
+          	// read and decode packets from the source file and
+  			// and dispatch decoded audio and video to the writer
+  	        while (mediaReader.readPacket() == null) ;
+
        }
 		
 	}
