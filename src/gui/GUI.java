@@ -1,23 +1,22 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
 /**
  * Main class for all GUI elements
@@ -39,7 +38,13 @@ public class GUI extends JFrame implements ActionListener {
 	JMenuBar menu;
 	JMenu file, options, help;
 	JMenuItem open, save, exit, about;
-	JButton start, stopp, pause;
+	JButton start, stopp, pause, back, forw, volume;
+	ImageIcon play = new ImageIcon("img/play_24.png");
+	ImageIcon stop = new ImageIcon("img/stop_24.png");
+	ImageIcon paused = new ImageIcon("img/pause_24.png");
+	ImageIcon backward = new ImageIcon("img/backward_24.png");
+	ImageIcon forward = new ImageIcon("img/forward_24.png");
+	ImageIcon vol = new ImageIcon("img/volume_24.png");
 	
 	GridBagConstraints gbc = new GridBagConstraints();
 	
@@ -111,30 +116,84 @@ public class GUI extends JFrame implements ActionListener {
 		
 		frame.setSize(800, 600);
 		
-		
-		start = new JButton("start");
-		start.setPreferredSize(new Dimension(30,30));
+		back = new JButton(backward);
+		//back.setPreferredSize(new Dimension(30,30));
+		back.setOpaque(false);
+		back.setFocusPainted(false);
+		back.setBorderPainted(false);
+		back.setContentAreaFilled(false);
+		back.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
 		gbc.gridx = 1;
-		gbc.gridy = 1;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		start_panel.add(back, gbc);
+		
+		
+		start = new JButton(play);
+		start.setPreferredSize(new Dimension(30,30));
+		start.setOpaque(false);
+		start.setFocusPainted(false);
+		start.setBorderPainted(false);
+		start.setContentAreaFilled(false);
+		start.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		gbc.gridx = 2;
+		gbc.gridy = 0;
 		gbc.gridheight = 1;
 		gbc.gridwidth = 1;
 		start_panel.add(start, gbc);
 		
-		stopp = new JButton("stopp");
-		//start.setPreferredSize(new Dimension(30,30));
-		gbc.gridx = 2;
-		gbc.gridy = 1;
+		stopp = new JButton(stop);
+		stopp.setPreferredSize(new Dimension(30,30));
+		stopp.setOpaque(false);
+		stopp.setFocusPainted(false);
+		stopp.setBorderPainted(false);
+		stopp.setContentAreaFilled(false);
+		stopp.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		gbc.gridx = 3;
+		gbc.gridy = 0;
 		gbc.gridheight = 1;
 		gbc.gridwidth = 1;
 		start_panel.add(stopp, gbc);
 		
-		pause = new JButton("pause");
-		//start.setPreferredSize(new Dimension(30,30));
-		gbc.gridx = 3;
-		gbc.gridy = 1;
+		pause = new JButton(paused);
+		pause.setPreferredSize(new Dimension(30,30));
+		pause.setOpaque(false);
+		pause.setFocusPainted(false);
+		pause.setBorderPainted(false);
+		pause.setContentAreaFilled(false);
+		pause.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		gbc.gridx = 4;
+		gbc.gridy = 0;
 		gbc.gridheight = 1;
 		gbc.gridwidth = 1;
 		start_panel.add(pause, gbc);
+		
+		forw = new JButton(forward);
+		forw.setPreferredSize(new Dimension(30,30));
+		forw.setOpaque(false);
+		forw.setFocusPainted(false);
+		forw.setBorderPainted(false);
+		forw.setContentAreaFilled(false);
+		forw.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		gbc.gridx = 5;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		start_panel.add(forw, gbc);
+		
+		volume = new JButton(vol);
+		volume.setPreferredSize(new Dimension(30,30));
+		volume.setOpaque(false);
+		volume.setFocusPainted(false);
+		volume.setBorderPainted(false);
+		volume.setContentAreaFilled(false);
+		volume.setBorder(BorderFactory.createEmptyBorder(2,30,10,2)); // Especially important
+		gbc.gridx = 6;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		start_panel.add(volume, gbc);
 		
 		//frame.pack();
 		frame.setVisible(true);
