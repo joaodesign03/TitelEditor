@@ -325,27 +325,26 @@ public class GUI extends JFrame implements ActionListener {
 			  });
 			  chooser.setMultiSelectionEnabled(false);
 			  if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-			     System.out.println ("Datei "+chooser.getSelectedFile()+" ausgewählt.");
+				System.out.println ("Datei "+chooser.getSelectedFile()+" ausgewählt.");
+		     	// create a media reader
+	  	        IMediaReader mediaReader = ToolFactory.makeReader(chooser.getSelectedFile().toString());
+	  	         
+	  	        // create a media writer
+	  	        IMediaWriter mediaWriter = ToolFactory.makeWriter(chooser.getSelectedFile().toString(), mediaReader);
+	  	 
+	  	        // add a writer to the reader, to create the output file
+	  	        mediaReader.addListener(mediaWriter);
+	  	         
+	  	        // create a media viewer with stats enabled
+	  	        IMediaViewer mediaViewer = ToolFactory.makeViewer(true);
+	  	         
+	  	        // add a viewer to the reader, to see the decoded media
+	  	        mediaReader.addListener(mediaViewer);
+	  	 
+	          	// read and decode packets from the source file and
+	  			// and dispatch decoded audio and video to the writer
+	  	        while (mediaReader.readPacket() == null) ;
 			  }
-			  
-			// create a media reader
-  	        IMediaReader mediaReader = ToolFactory.makeReader(chooser.getSelectedFile().toString());
-  	         
-  	        // create a media writer
-  	        IMediaWriter mediaWriter = ToolFactory.makeWriter(chooser.getSelectedFile().toString(), mediaReader);
-  	 
-  	        // add a writer to the reader, to create the output file
-  	        mediaReader.addListener(mediaWriter);
-  	         
-  	        // create a media viewer with stats enabled
-  	        IMediaViewer mediaViewer = ToolFactory.makeViewer(true);
-  	         
-  	        // add a viewer to the reader, to see the decoded media
-  	        mediaReader.addListener(mediaViewer);
-  	 
-          	// read and decode packets from the source file and
-  			// and dispatch decoded audio and video to the writer
-  	        while (mediaReader.readPacket() == null) ;
 
        }
 		
