@@ -25,6 +25,7 @@ import com.xuggle.mediatool.IMediaViewer;
 import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.ToolFactory;
 
+
 /**
  * Main class for all GUI elements
  * @author Johann Houszka 0625523
@@ -46,12 +47,24 @@ public class GUI extends JFrame implements ActionListener {
 	JMenu file, options, help;
 	JMenuItem open, save, exit, about;
 	JButton start, stopp, pause, back, forw, volume;
+	JButton cent, right, left, ital, bol, under;
+	
+	//image icons for video preview
 	ImageIcon play = new ImageIcon("img/play_24.png");
 	ImageIcon stop = new ImageIcon("img/stop_24.png");
 	ImageIcon paused = new ImageIcon("img/pause_24.png");
 	ImageIcon backward = new ImageIcon("img/backward_24.png");
 	ImageIcon forward = new ImageIcon("img/forward_24.png");
 	ImageIcon vol = new ImageIcon("img/volume_24.png");
+	
+	//image icons for text effects
+	ImageIcon center = new ImageIcon("img/center_24.png");
+	ImageIcon rightbound = new ImageIcon("img/rightbound_24.png");
+	ImageIcon leftbound = new ImageIcon("img/leftbound_24.png");
+	ImageIcon italic = new ImageIcon("img/italic1_24.png");
+	ImageIcon bold = new ImageIcon("img/bold1_24.png");
+	ImageIcon underline = new ImageIcon("img/underline1_24.png");
+	
 	
 	GridBagConstraints gbc = new GridBagConstraints();
 	
@@ -87,9 +100,11 @@ public class GUI extends JFrame implements ActionListener {
         help.add(about);
         
         frame.add(menu, BorderLayout.NORTH);
-		
+        
+		//////
+        //panels
+        //////
 		panel_effects = new JPanel(new GridBagLayout());
-		//panel_effects.setBackground(new Color(255, 0, 0));
 		panel_effects.setPreferredSize(new Dimension(600, 100));
 		panel_effects.setBorder(BorderFactory.createTitledBorder("Video Effects"));
 		
@@ -123,8 +138,11 @@ public class GUI extends JFrame implements ActionListener {
 		
 		frame.setSize(800, 600);
 		
+		
+		//////
+		//buttons video preview
+		//////
 		back = new JButton(backward);
-		//back.setPreferredSize(new Dimension(30,30));
 		back.setOpaque(false);
 		back.setFocusPainted(false);
 		back.setBorderPainted(false);
@@ -201,6 +219,87 @@ public class GUI extends JFrame implements ActionListener {
 		gbc.gridheight = 1;
 		gbc.gridwidth = 1;
 		start_panel.add(volume, gbc);
+		
+		///////
+		//buttons text effects
+		//////
+		left = new JButton(leftbound);
+		//left.setPreferredSize(new Dimension(30,30));
+		left.setOpaque(false);
+		left.setFocusPainted(false);
+		left.setBorderPainted(false);
+		left.setContentAreaFilled(false);
+		left.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		panel_settings.add(left, gbc);
+		
+		cent = new JButton(center);
+		//left.setPreferredSize(new Dimension(30,30));
+		cent.setOpaque(false);
+		cent.setFocusPainted(false);
+		cent.setBorderPainted(false);
+		cent.setContentAreaFilled(false);
+		cent.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		gbc.gridx = 2;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		panel_settings.add(cent, gbc);
+		
+		right = new JButton(rightbound);
+		//left.setPreferredSize(new Dimension(30,30));
+		right.setOpaque(false);
+		right.setFocusPainted(false);
+		right.setBorderPainted(false);
+		right.setContentAreaFilled(false);
+		right.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		gbc.gridx = 3;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		panel_settings.add(right, gbc);
+		
+		ital = new JButton(italic);
+		//left.setPreferredSize(new Dimension(30,30));
+		ital.setOpaque(false);
+		ital.setFocusPainted(false);
+		ital.setBorderPainted(false);
+		ital.setContentAreaFilled(false);
+		ital.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		gbc.gridx = 4;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		panel_settings.add(ital, gbc);
+		
+		bol = new JButton(bold);
+		//left.setPreferredSize(new Dimension(30,30));
+		bol.setOpaque(false);
+		bol.setFocusPainted(false);
+		bol.setBorderPainted(false);
+		bol.setContentAreaFilled(false);
+		bol.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		gbc.gridx = 5;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		panel_settings.add(bol, gbc);
+		
+		under = new JButton(underline);
+		//left.setPreferredSize(new Dimension(30,30));
+		under.setOpaque(false);
+		under.setFocusPainted(false);
+		under.setBorderPainted(false);
+		under.setContentAreaFilled(false);
+		under.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		gbc.gridx = 6;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		panel_settings.add(under, gbc);
 		
 		//frame.pack();
 		frame.setVisible(true);
