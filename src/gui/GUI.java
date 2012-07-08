@@ -229,7 +229,7 @@ public class GUI extends JFrame implements ActionListener {
 		left.setFocusPainted(false);
 		left.setBorderPainted(false);
 		left.setContentAreaFilled(false);
-		left.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		left.setBorder(BorderFactory.createEmptyBorder(1,1,1,1)); // Especially important
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -242,7 +242,7 @@ public class GUI extends JFrame implements ActionListener {
 		cent.setFocusPainted(false);
 		cent.setBorderPainted(false);
 		cent.setContentAreaFilled(false);
-		cent.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		cent.setBorder(BorderFactory.createEmptyBorder(1,1,1,1)); // Especially important
 		gbc.gridx = 2;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -255,7 +255,7 @@ public class GUI extends JFrame implements ActionListener {
 		right.setFocusPainted(false);
 		right.setBorderPainted(false);
 		right.setContentAreaFilled(false);
-		right.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		right.setBorder(BorderFactory.createEmptyBorder(1,1,1,1)); // Especially important
 		gbc.gridx = 3;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -268,7 +268,7 @@ public class GUI extends JFrame implements ActionListener {
 		ital.setFocusPainted(false);
 		ital.setBorderPainted(false);
 		ital.setContentAreaFilled(false);
-		ital.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		ital.setBorder(BorderFactory.createEmptyBorder(1,5,1,1)); // Especially important
 		gbc.gridx = 4;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -281,7 +281,7 @@ public class GUI extends JFrame implements ActionListener {
 		bol.setFocusPainted(false);
 		bol.setBorderPainted(false);
 		bol.setContentAreaFilled(false);
-		bol.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		bol.setBorder(BorderFactory.createEmptyBorder(1,1,1,1)); // Especially important
 		gbc.gridx = 5;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -294,7 +294,7 @@ public class GUI extends JFrame implements ActionListener {
 		under.setFocusPainted(false);
 		under.setBorderPainted(false);
 		under.setContentAreaFilled(false);
-		under.setBorder(BorderFactory.createEmptyBorder(2,2,10,2)); // Especially important
+		under.setBorder(BorderFactory.createEmptyBorder(1,1,1,1)); // Especially important
 		gbc.gridx = 6;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
