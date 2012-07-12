@@ -3,8 +3,12 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/xuggle-xuggler-5.4.jar" sourcepath="lib/xuggle-xuggler-5.4.jar"/>
-	<classpathentry kind="lib" path="lib/logback-classic-0.9.jar" sourcepath="lib/logback-classic-0.9.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-simple-1.0.1.jar" sourcepath="lib/slf4j-simple-1.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/logback-core-0.9.6.jar" sourcepath="lib/logback-core-0.9.6.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-1.6.6.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-migrator-1.6.6.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-ext-1.6.6.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.6.6.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-over-slf4j-1.6.6.jar"/>
+	<classpathentry kind="lib" path="lib/jul-to-slf4j-1.6.6.jar"/>
+	<classpathentry kind="lib" path="lib/jcl-over-slf4j-1.6.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
