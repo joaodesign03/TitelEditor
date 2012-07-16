@@ -1,3 +1,4 @@
+import gui.DecodeAndPlayVideo;
 import gui.GUI;
 
 
@@ -12,6 +13,8 @@ public class MainApp {
 		
 		GUI g = new GUI();
 		g.initInterface();
+	
+
 
 	}
 
