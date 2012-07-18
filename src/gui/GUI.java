@@ -21,12 +21,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import bl.VideoPreview;
-
 import com.xuggle.mediatool.IMediaReader;
-import com.xuggle.mediatool.IMediaViewer;
 import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.xuggler.demos.VideoImage;
+import com.xuggle.mediatool.MediaListenerAdapter;
+import com.xuggle.mediatool.event.IVideoPictureEvent;
 
 
 /**
@@ -331,21 +330,19 @@ public class GUI extends JFrame implements ActionListener {
 			  if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 				System.out.println ("Datei "+chooser.getSelectedFile()+" ausgewählt.");
 				String filename = chooser.getSelectedFile().toString();
-		     	VideoPreview prev = new VideoPreview();
+		     	//VideoPreview prev = new VideoPreview();
 		     	//prev.showVideo(filename);
-
 		     	    
 		     	    // create a new reader
-
 		     	    IMediaReader reader = ToolFactory.makeReader(filename);
+		     	    
 		     	    reader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
 		     	    //
 		     	    // Create a MediaViewer object and tell it to play video only
 		     	    //
-		     	    reader.addListener(ToolFactory.makeViewer(true));//(IMediaViewer.Mode.AUDIO_VIDEO));
-
+		     	    reader.addListener(ToolFactory.makeViewer(true));
+		     	    
 		     	    // read out the contents of the media file, and sit back and watch
-
 		     	    while (reader.readPacket() == null)
 		     	    	do {} while(false);
 				
@@ -357,6 +354,8 @@ public class GUI extends JFrame implements ActionListener {
 	
 		
 	}//end action performed
+	
+      
 	/**
 	 * The window we'll draw the video on.
 	 * 
