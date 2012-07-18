@@ -21,19 +21,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-//import com.sun.tools.example.debug.bdi.Utils;
 import bl.VideoPreview;
 
-import com.xuggle.xuggler.Utils;
-import com.xuggle.xuggler.Global;
-import com.xuggle.xuggler.ICodec;
-import com.xuggle.xuggler.IContainer;
-import com.xuggle.xuggler.IPacket;
-import com.xuggle.xuggler.IPixelFormat;
-import com.xuggle.xuggler.IStream;
-import com.xuggle.xuggler.IStreamCoder;
-import com.xuggle.xuggler.IVideoPicture;
-import com.xuggle.xuggler.IVideoResampler;
+import com.xuggle.mediatool.IMediaReader;
+import com.xuggle.mediatool.IMediaViewer;
+import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.xuggler.demos.VideoImage;
 
 
@@ -340,8 +332,22 @@ public class GUI extends JFrame implements ActionListener {
 				System.out.println ("Datei "+chooser.getSelectedFile()+" ausgewählt.");
 				String filename = chooser.getSelectedFile().toString();
 		     	VideoPreview prev = new VideoPreview();
-		     	prev.showVideo(filename);
-				
+		     	//prev.showVideo(filename);
+
+		     	    
+		     	    // create a new reader
+
+		     	    IMediaReader reader = ToolFactory.makeReader(filename);
+		     	    reader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
+		     	    //
+		     	    // Create a MediaViewer object and tell it to play video only
+		     	    //
+		     	    reader.addListener(ToolFactory.makeViewer(true));//(IMediaViewer.Mode.AUDIO_VIDEO));
+
+		     	    // read out the contents of the media file, and sit back and watch
+
+		     	    while (reader.readPacket() == null)
+		     	    	do {} while(false);
 				
 				 
 				
