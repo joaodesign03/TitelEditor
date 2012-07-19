@@ -22,10 +22,11 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import com.xuggle.mediatool.IMediaReader;
-import com.xuggle.mediatool.ToolFactory;
-import com.xuggle.xuggler.demos.VideoImage;
 import com.xuggle.mediatool.MediaListenerAdapter;
+import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.mediatool.event.IVideoPictureEvent;
+import com.xuggle.xuggler.demos.VideoImage;
+import gui.VideoPlayer;
 
 
 /**
@@ -43,6 +44,7 @@ public class GUI extends JFrame implements ActionListener {
 	/**
 	 * Instantiate user interface variables
 	 */
+	gui.VideoPlayer vid_panel;
 	JFrame frame = new JFrame("Titeleditor");
 	JPanel panel_video_big, panel_effects, panel_video, panel_settings, setting_timeline, start_panel;
 	JMenuBar menu;
@@ -110,9 +112,9 @@ public class GUI extends JFrame implements ActionListener {
 		panel_effects.setPreferredSize(new Dimension(600, 100));
 		panel_effects.setBorder(BorderFactory.createTitledBorder("Video Effects"));
 		
-		panel_video = new JPanel(new GridBagLayout());
-		panel_video.setPreferredSize(new Dimension(600, 400));
-		panel_video.setBorder(BorderFactory.createTitledBorder("Video Preview"));
+		//panel_video = new JPanel(new GridBagLayout());
+		//panel_video.setPreferredSize(new Dimension(600, 400));
+		//panel_video.setBorder(BorderFactory.createTitledBorder("Video Preview"));
 		
 		panel_settings = new JPanel(new GridBagLayout());
 		panel_settings.setPreferredSize(new Dimension(200, 500));
@@ -127,11 +129,17 @@ public class GUI extends JFrame implements ActionListener {
 		start_panel.setPreferredSize(new Dimension(600, 50));
 		start_panel.setBorder(BorderFactory.createTitledBorder("Start/Stop"));
 		
+		
+		vid_panel = new gui.VideoPlayer();
+		System.out.println(vid_panel.frame.getSize());
+		System.out.println(vid_panel.frame.getBorder());
+		
 		panel_video_big = new JPanel();
 		//panel_video_big.setPreferredSize(new Dimension(600, 400));
 		panel_video_big.setLayout(new BoxLayout(panel_video_big, BoxLayout.PAGE_AXIS));
 		panel_video_big.add(panel_effects);
-		panel_video_big.add(panel_video);
+		//panel_video_big.add(panel_video);
+		panel_video_big.add(vid_panel.frame);
 		panel_video_big.add(start_panel);
 		
 		frame.add(panel_video_big,BorderLayout.CENTER);
@@ -310,8 +318,6 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 
-	
-	@SuppressWarnings("deprecation")
 	public void actionPerformed(ActionEvent object) {
 		//close application
 		if (object.getSource() == exit){
@@ -330,22 +336,10 @@ public class GUI extends JFrame implements ActionListener {
 			  if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 				System.out.println ("Datei "+chooser.getSelectedFile()+" ausgewählt.");
 				String filename = chooser.getSelectedFile().toString();
-		     	//VideoPreview prev = new VideoPreview();
-		     	//prev.showVideo(filename);
-		     	    
-		     	    // create a new reader
-		     	    IMediaReader reader = ToolFactory.makeReader(filename);
-		     	    
-		     	    reader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
-		     	    //
-		     	    // Create a MediaViewer object and tell it to play video only
-		     	    //
-		     	    reader.addListener(ToolFactory.makeViewer(true));
-		     	    
-		     	    // read out the contents of the media file, and sit back and watch
-		     	    while (reader.readPacket() == null)
-		     	    	do {} while(false);
+				vid_panel.play(filename);
 				
+			    //videoPlayer.play(filename);
+		     	//this.play(filename);
 				 
 				
 			  } //end if.approved
@@ -382,6 +376,17 @@ public class GUI extends JFrame implements ActionListener {
 	public static void closeJavaWindow()
 	{
 	  System.exit(0);
+	}
+	
+	public void play(String sourceUrl)
+	{
+	    IMediaReader reader = ToolFactory.makeReader(sourceUrl);
+	    reader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
+	    
+	    reader.addListener(ToolFactory.makeViewer(true));
+	    
+	    while (reader.readPacket() == null)
+	      do {} while(false);
 	}
 	
 }//end class

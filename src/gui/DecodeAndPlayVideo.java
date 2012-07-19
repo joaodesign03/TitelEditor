@@ -1,34 +1,15 @@
+
 package gui;
-
-/*******************************************************************************
- * Copyright (c) 2008, 2010 Xuggle Inc.  All rights reserved.
- *  
- * This file is part of Xuggle-Xuggler-Main.
- *
- * Xuggle-Xuggler-Main is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Xuggle-Xuggler-Main is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with Xuggle-Xuggler-Main.  If not, see <http://www.gnu.org/licenses/>.
- *******************************************************************************/
-
 
 import java.awt.image.BufferedImage;
 
 import com.xuggle.xuggler.Global;
+import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IPacket;
 import com.xuggle.xuggler.IPixelFormat;
 import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
-import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IVideoPicture;
 import com.xuggle.xuggler.IVideoResampler;
 import com.xuggle.xuggler.Utils;
@@ -53,13 +34,16 @@ public class DecodeAndPlayVideo
    * @param args Must contain one string which represents a filename
    */
   @SuppressWarnings("deprecation")
-  public static void main(String[] args)
-  {
-    /*if (args.length <= 0)
-      throw new IllegalArgumentException("must pass in a filename" +
-      		" as the first argument");*/
+  //public static void main(String[] args)
+  //{
+  //  if (args.length <= 0)
+  //    throw new IllegalArgumentException("must pass in a filename" +
+  //    		" as the first argument");
 
-String filename = "/Users/johann/Movies/Falling.Skies.S02E02.HDTV.x264-ASAP.mp4";//args[0];
+  	
+  public DecodeAndPlayVideo(String file) {
+	  
+    String filename = file;
 
     // Let's make sure that we can actually convert video pixel formats.
     if (!IVideoResampler.isSupported(
@@ -269,7 +253,7 @@ String filename = "/Users/johann/Movies/Falling.Skies.S02E02.HDTV.x264-ASAP.mp4"
     }
     closeJavaWindow();
 
-  }
+ }
 
   /**
    * The window we'll draw the video on.
