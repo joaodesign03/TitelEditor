@@ -130,16 +130,19 @@ public class GUI extends JFrame implements ActionListener {
 		start_panel.setBorder(BorderFactory.createTitledBorder("Start/Stop"));
 		
 		
-		vid_panel = new gui.VideoPlayer();
-		System.out.println(vid_panel.frame.getSize());
-		System.out.println(vid_panel.frame.getBorder());
+		//vid_panel = new gui.VideoPlayer();
+		DecodeAndPlayAudioAndVideo p = new DecodeAndPlayAudioAndVideo();
+		VideoImage im = p.mScreen;
+		//System.out.println(vid_panel.frame.getSize());
+		//System.out.println(vid_panel.frame.getBorder());
 		
 		panel_video_big = new JPanel();
 		//panel_video_big.setPreferredSize(new Dimension(600, 400));
 		panel_video_big.setLayout(new BoxLayout(panel_video_big, BoxLayout.PAGE_AXIS));
 		panel_video_big.add(panel_effects);
 		//panel_video_big.add(panel_video);
-		panel_video_big.add(vid_panel.frame);
+		//panel_video_big.add(vid_panel.frame);
+		panel_video_big.add(im);
 		panel_video_big.add(start_panel);
 		
 		frame.add(panel_video_big,BorderLayout.CENTER);
