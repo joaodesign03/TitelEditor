@@ -1,6 +1,5 @@
 package seditor;
 
-import gui.VideoPlayer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

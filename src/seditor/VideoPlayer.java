@@ -41,6 +41,9 @@ public class VideoPlayer {
 	public static final int STATUS_LOADED = 3;
 	public static final int STATUS_RELOADING = 4;
 
+	private Integer videoWidth = 590;
+	private Integer videoHeight = 490;
+	
 	private int videoStreamID = -1;
 	private int audioStreamID = -1;
 	
@@ -186,7 +189,8 @@ public class VideoPlayer {
 		@Override
 		public synchronized void paint(Graphics g) {
 			if (image != null) {
-				g.drawImage(image, 0, 0, null);
+				g.drawImage(image, (getWidth() - videoWidth)/2, (getHeight() - videoHeight)/2, videoWidth, videoHeight, this);
+				//g.drawImage(image, 0, 0, null);
 			}
 		}
 	}
