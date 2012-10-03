@@ -17,12 +17,12 @@ import com.xuggle.xuggler.Utils;
 
 public class VideoPreview {
 
-	GUI gui = new GUI();
+	//GUI gui = new GUI();
 	public VideoPreview()  {
 		
 	}
 	
-	public void showVideo(String filename) {
+	public void showVideo(String filename, GUI gui) {
 		/**************
 		 * START VIDEO
 		 ************/

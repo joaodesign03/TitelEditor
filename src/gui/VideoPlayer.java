@@ -2,9 +2,12 @@ package gui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.nio.ShortBuffer;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -25,6 +28,7 @@ import com.xuggle.xuggler.IStreamCoder;
 
 public class VideoPlayer {
 	public MyVideoFrame frame;// = new MyVideoFrame();
+<<<<<<< HEAD
 	private static SourceDataLine mLine; // audio
 	
 	// source file 
@@ -36,6 +40,11 @@ public class VideoPlayer {
 	public static final int STATUS_PAUSE = 1;
 	public static final int STATUS_STOP = 2;
 	public static final int STATUS_LOADED = 3;
+=======
+	private Integer videoWidth = 590;
+	private Integer videoHeight = 490;
+	//private IVideoResampler videoResampler = null;
+>>>>>>> changes
 
 	public VideoPlayer() {
 		frame = new MyVideoFrame();
@@ -47,6 +56,7 @@ public class VideoPlayer {
 	}
 
 	public VideoPlayer(String filename) {
+<<<<<<< HEAD
 		this.load(filename);
 	}
 
@@ -178,4 +188,63 @@ public class VideoPlayer {
 	public void setSourceFile(String sourceFile) {
 		this.sourceFile = sourceFile;
 	}
+=======
+		this.play(filename);
+	}
+
+	/*
+	 * public static void main(String[] args) { String sourceUrl =
+	 * "/Users/johann/Movies/Falling.Skies.S02E01.HDTV.x264-ASAP.mp4";
+	 * 
+	 * VideoPlayer videoPlayer = new VideoPlayer(); videoPlayer.play(sourceUrl);
+	 * }
+	 */
+
+	
+	public void play(String sourceUrl) {
+		IMediaReader reader = ToolFactory.makeReader(sourceUrl);
+		reader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
+		// final MyVideoFrame frame = new MyVideoFrame();
+		// frame.setSize(new Dimension(600, 500));
+		// frame.setBorder(BorderFactory.createTitledBorder("Video Preview"));
+
+		MediaListenerAdapter adapter = new MediaListenerAdapter() {
+			@Override
+			public void onVideoPicture(IVideoPictureEvent event) {
+				frame.setImage((BufferedImage) event.getImage());
+			}
+
+
+		};
+		reader.addListener(adapter);
+		frame.setVisible(true);
+
+		while (reader.readPacket() == null)
+			do {
+			} while (false);
+	}
+
+	@SuppressWarnings("serial")
+	public class MyVideoFrame extends JPanel {
+		Image image;
+
+		public void setImage(final Image image) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					MyVideoFrame.this.image = image;
+					repaint();
+				}
+			});
+		}
+
+		@Override
+		public synchronized void paint(Graphics g) {
+			if (image != null) {
+				g.drawImage(image, (getWidth() - videoWidth)/2, (getHeight() - videoHeight)/2, videoWidth, videoHeight, this);
+				//g.drawImage(image, 0, 0, null);
+			}
+		}
+		
+	}
+>>>>>>> changes
 }

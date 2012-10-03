@@ -5,18 +5,23 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import com.xuggle.xuggler.demos.*;
+
 import com.xuggle.xuggler.Global;
 import com.xuggle.xuggler.IAudioSamples;
+import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IPacket;
 import com.xuggle.xuggler.IPixelFormat;
 import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
-import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IVideoPicture;
 import com.xuggle.xuggler.IVideoResampler;
 import com.xuggle.xuggler.Utils;
+<<<<<<< HEAD
+=======
+import com.xuggle.xuggler.demos.VideoImage;
+import com.xuggle.xuggler.demos.VideoImage.ImageComponent;
+>>>>>>> changes
 
 public class DecodeAndPlayAudioAndVideo {
 
@@ -30,12 +35,23 @@ public class DecodeAndPlayAudioAndVideo {
 	 * The window we'll draw the video on.
 	 * 
 	 */
+<<<<<<< HEAD
 	public static VideoImage mScreen = null;
 
+=======
+	public static VideoImage mScreen;
+	
+>>>>>>> changes
 	private static long mSystemVideoClockStartTime;
 
 	private static long mFirstVideoTimestampInStream;
 
+<<<<<<< HEAD
+=======
+	public static IContainer container = null;
+	//public static VideoImage comp = null;
+
+>>>>>>> changes
 	/**
 	 * Takes a media container (file) as the first argument, opens it, plays
 	 * audio as quickly as it can, and opens up a Swing window and displays
@@ -45,12 +61,32 @@ public class DecodeAndPlayAudioAndVideo {
 	 *            Must contain one string which represents a filename
 	 */
 	@SuppressWarnings("deprecation")
+<<<<<<< HEAD
 	public static void main(String[] args) {
+=======
+	//public static void main(String[] args) {
+	public DecodeAndPlayAudioAndVideo(VideoImage comp)  {
+		//comp = this.mScreen;
+		mScreen = new VideoImage();
+	}
+	public static VideoImage getmScreen() {
+		return mScreen;
+	}
+	public static void setmScreen(VideoImage mScreen) {
+		DecodeAndPlayAudioAndVideo.mScreen = mScreen;
+	}
+	@SuppressWarnings("deprecation")
+	public void init(String filename) {
+>>>>>>> changes
 		// if (args.length <= 0)
 		// throw new
 		// IllegalArgumentException("must pass in a filename as the first argument");
 
+<<<<<<< HEAD
 		String filename = "/Users/johann/Movies/Falling.Skies.S02E01.HDTV.x264-ASAP.mp4";// args[0];
+=======
+		//String filename = "/Users/johann/Movies/Falling.Skies.S02E01.HDTV.x264-ASAP.mp4";// args[0];
+>>>>>>> changes
 
 		// Let's make sure that we can actually convert video pixel formats.
 		if (!IVideoResampler
@@ -59,7 +95,11 @@ public class DecodeAndPlayAudioAndVideo {
 					"you must install the GPL version of Xuggler (with IVideoResampler support) for this demo to work");
 
 		// Create a Xuggler container object
+<<<<<<< HEAD
 		IContainer container = IContainer.make();
+=======
+		container = IContainer.make();
+>>>>>>> changes
 
 		// Open up the container
 		if (container.open(filename, IContainer.Type.READ, null) < 0)
@@ -294,6 +334,10 @@ public class DecodeAndPlayAudioAndVideo {
 	 */
 	private static void openJavaVideo() {
 		mScreen = new VideoImage();
+<<<<<<< HEAD
+=======
+		
+>>>>>>> changes
 	}
 
 	/**

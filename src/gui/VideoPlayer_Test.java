@@ -33,8 +33,12 @@ public class VideoPlayer_Test
   {
     String sourceUrl = "/Users/matthias/Movies/Doctor.Who.2005.7x04.The.Power.Of.Three.HDTV.x264-FoV.mp4";
     
+    GUI g = new GUI();
+    g.initInterface();
+    
     VideoPlayer_Test videoPlayer = new VideoPlayer_Test();
     videoPlayer.play(sourceUrl);
+
   }
 
   public void play(String sourceUrl)
