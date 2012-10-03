@@ -31,7 +31,7 @@ public class VideoPlayer_Test
 	}*/
   public static void main(String[] args)
   {
-    String sourceUrl = "/Users/johann/Movies/Falling.Skies.S02E01.HDTV.x264-ASAP.mp4";
+    String sourceUrl = "/Users/matthias/Movies/Doctor.Who.2005.7x04.The.Power.Of.Three.HDTV.x264-FoV.mp4";
     
     VideoPlayer_Test videoPlayer = new VideoPlayer_Test();
     videoPlayer.play(sourceUrl);
