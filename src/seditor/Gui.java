@@ -1,50 +1,28 @@
-package gui;
+package seditor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileFilter;
 
-import com.xuggle.mediatool.IMediaReader;
-import com.xuggle.mediatool.MediaListenerAdapter;
-import com.xuggle.mediatool.ToolFactory;
-import com.xuggle.mediatool.event.IVideoPictureEvent;
-import com.xuggle.xuggler.demos.VideoImage;
-import gui.VideoPlayer;
+public class Gui extends JFrame  {
 
-/**
- * Main class for all GUI elements
- * 
- * @author Johann Houszka 0625523
- * 
- */
-public class GUI extends JFrame implements ActionListener {
-
-	/**
-	 * random serial number
-	 */
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 8961611986268624022L;
+	
 	/**
 	 * Instantiate user interface variables
 	 */
-	gui.VideoPlayer vid_panel;
+	VideoPlayer vid_panel;
 	JFrame frame = new JFrame("Titeleditor");
 	JPanel panel_video_big, panel_effects, panel_video, panel_settings,
 			setting_timeline, start_panel;
@@ -71,13 +49,15 @@ public class GUI extends JFrame implements ActionListener {
 	ImageIcon icon_underline = new ImageIcon("img/underline1_24.png");
 
 	GridBagConstraints gbc = new GridBagConstraints();
-
-	private String filename;
-
+	
+	GuiListener guiListener;
+	
 	/**
 	 * Build user interface
 	 */
 	public void initInterface() {
+		guiListener = new GuiListener(this);
+		
 		frame.setLayout(new BorderLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -87,13 +67,17 @@ public class GUI extends JFrame implements ActionListener {
 		help = new JMenu("Help");
 
 		open = new JMenuItem("Open");
-		open.addActionListener(this);
+		open.setActionCommand("menu_open");
+		open.addActionListener(guiListener);
 		save = new JMenuItem("Save");
-		save.addActionListener(this);
+		save.setActionCommand("menu_save");
+		save.addActionListener(guiListener);
 		exit = new JMenuItem("Exit");
-		exit.addActionListener(this);
+		exit.setActionCommand("menu_exit");
+		exit.addActionListener(guiListener);
 		about = new JMenuItem("About");
-		about.addActionListener(this);
+		about.setActionCommand("menu_about");
+		about.addActionListener(guiListener);
 
 		menu.add(file);
 		menu.add(options);
@@ -111,12 +95,7 @@ public class GUI extends JFrame implements ActionListener {
 		// ////
 		panel_effects = new JPanel(new GridBagLayout());
 		panel_effects.setPreferredSize(new Dimension(600, 100));
-		panel_effects.setBorder(BorderFactory
-				.createTitledBorder("Video Effects"));
-
-		// panel_video = new JPanel(new GridBagLayout());
-		// panel_video.setPreferredSize(new Dimension(600, 400));
-		// panel_video.setBorder(BorderFactory.createTitledBorder("Video Preview"));
+		panel_effects.setBorder(BorderFactory.createTitledBorder("Video Effects"));
 
 		panel_settings = new JPanel(new GridBagLayout());
 		panel_settings.setPreferredSize(new Dimension(200, 500));
@@ -133,20 +112,12 @@ public class GUI extends JFrame implements ActionListener {
 		start_panel.setPreferredSize(new Dimension(600, 50));
 		start_panel.setBorder(BorderFactory.createTitledBorder("Start/Stop"));
 
-		vid_panel = new gui.VideoPlayer();
-		// DecodeAndPlayAudioAndVideo p = new DecodeAndPlayAudioAndVideo();
-		// VideoImage im = p.mScreen;
-		// System.out.println(vid_panel.frame.getSize());
-		// System.out.println(vid_panel.frame.getBorder());
+		vid_panel = new VideoPlayer();
 
 		panel_video_big = new JPanel();
-		// panel_video_big.setPreferredSize(new Dimension(600, 400));
-		panel_video_big.setLayout(new BoxLayout(panel_video_big,
-				BoxLayout.PAGE_AXIS));
+		panel_video_big.setLayout(new BoxLayout(panel_video_big, BoxLayout.PAGE_AXIS));
 		panel_video_big.add(panel_effects);
-		// panel_video_big.add(panel_video);
 		panel_video_big.add(vid_panel.frame);
-		// panel_video_big.add(im);
 		panel_video_big.add(start_panel);
 
 		frame.add(panel_video_big, BorderLayout.CENTER);
@@ -178,7 +149,8 @@ public class GUI extends JFrame implements ActionListener {
 		nav_start.setBorderPainted(false);
 		nav_start.setContentAreaFilled(false);
 		nav_start.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 2)); // Especially important
-		nav_start.addActionListener(this);
+		nav_start.setActionCommand("player_start");
+		nav_start.addActionListener(guiListener);
 		
 		gbc.gridx = 2;
 		gbc.gridy = 0;
@@ -193,7 +165,8 @@ public class GUI extends JFrame implements ActionListener {
 		nav_stop.setBorderPainted(false);
 		nav_stop.setContentAreaFilled(false);
 		nav_stop.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 2)); // Especially important
-		nav_stop.addActionListener(this);
+		nav_stop.setActionCommand("player_stop");
+		nav_stop.addActionListener(guiListener);
 
 		gbc.gridx = 3;
 		gbc.gridy = 0;
@@ -201,20 +174,10 @@ public class GUI extends JFrame implements ActionListener {
 		gbc.gridwidth = 1;
 		start_panel.add(nav_stop, gbc);
 
-//		pause = new JButton(paused);
-//		pause.setPreferredSize(new Dimension(30, 30));
-//		pause.setOpaque(false);
-//		pause.setFocusPainted(false);
-//		pause.setBorderPainted(false);
-//		pause.setContentAreaFilled(false);
-//		pause.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 2)); // Especially import
-//		pause.addActionListener(this);
-		
 		gbc.gridx = 4;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
 		gbc.gridwidth = 1;
-//		start_panel.add(pause, gbc);
 
 		nav_forw = new JButton(icon_forward);
 		nav_forw.setPreferredSize(new Dimension(30, 30));
@@ -290,7 +253,6 @@ public class GUI extends JFrame implements ActionListener {
 		panel_settings.add(text_right, gbc);
 
 		text_ital = new JButton(icon_italic);
-		// left.setPreferredSize(new Dimension(30,30));
 		text_ital.setOpaque(false);
 		text_ital.setFocusPainted(false);
 		text_ital.setBorderPainted(false);
@@ -336,94 +298,15 @@ public class GUI extends JFrame implements ActionListener {
 		frame.setResizable(false);
 
 	}
-
-	public void actionPerformed(ActionEvent object) {
-		// close application
-		if (object.getSource() == exit) {
-			System.exit(0);
-		}
-		if (object.getSource() == open) {
-			JFileChooser chooser = new JFileChooser();
-			chooser.addChoosableFileFilter(new FileFilter() {
-				public boolean accept(File f) {
-					if (f.isDirectory())
-						return true;
-					return f.getName().toLowerCase().endsWith(".mp4");
-				}
-
-				public String getDescription() {
-					return "Video Files";
-				}
-			});
-			chooser.setMultiSelectionEnabled(false);
-			if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-				System.out.println("GUI: Datei " + chooser.getSelectedFile()
-						+ " ausgewählt.");
-				filename = chooser.getSelectedFile().getPath();
-
-				Thread playThread = new Thread() {
-					public void run() {
-						vid_panel.load(filename);
-					}
-				};
-				playThread.start();
-
-				// videoPlayer.play(filename);
-				// this.play(filename);
-
-			} // end if.approved
-
-		} 
-		if(object.getSource() == nav_start){
-			if(vid_panel.pause()){
-				if(vid_panel.getStatus() == VideoPlayer.STATUS_PAUSE) this.nav_start.setIcon(icon_play);
-				if(vid_panel.getStatus() == VideoPlayer.STATUS_PLAY) this.nav_start.setIcon(icon_paused);
-			}
-		}
-		if(object.getSource() == nav_stop){
-			
-			vid_panel.stop();
-		}
-		System.out.println("button: "+object.getSource().toString());
-		// end actionperformend-open
-
-	}// end action performed
-
-	/**
-	 * The window we'll draw the video on.
-	 * 
-	 */
-	private static VideoImage mScreen = null;
-
-	public static void updateJavaWindow(BufferedImage javaImage) {
-		mScreen.setImage(javaImage);
+	
+	public VideoPlayer getVideo() { return vid_panel; }
+	public JFrame getFrame() { return frame; }
+	
+	public void setPaused() {
+		this.nav_start.setIcon(icon_play);
 	}
-
-	/**
-	 * Opens a Swing window on screen.
-	 */
-	public static void openJavaWindow() {
-		mScreen = new VideoImage();
+	
+	public void setPlaying() {
+		this.nav_start.setIcon(icon_paused);
 	}
-
-	/**
-	 * Forces the swing thread to terminate; I'm sure there is a right way to do
-	 * this in swing, but this works too.
-	 */
-	public static void closeJavaWindow() {
-		System.exit(0);
-	}
-
-	public void play(String sourceUrl) {
-		IMediaReader reader = ToolFactory.makeReader(sourceUrl);
-		reader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
-
-		reader.addListener(ToolFactory.makeViewer(true));
-
-		while (reader.readPacket() == null)
-			do {
-			} while (false);
-	}
-
-}// end class
-
+}

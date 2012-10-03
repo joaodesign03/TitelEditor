@@ -1,4 +1,4 @@
-package gui;
+package seditor;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -21,6 +21,9 @@ import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.mediatool.event.IAudioSamplesEvent;
 import com.xuggle.mediatool.event.IVideoPictureEvent;
 import com.xuggle.xuggler.IAudioSamples;
+import com.xuggle.xuggler.IContainer;
+import com.xuggle.xuggler.IStream;
+import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IStreamCoder;
 
 public class VideoPlayer {
@@ -36,7 +39,11 @@ public class VideoPlayer {
 	public static final int STATUS_PAUSE = 1;
 	public static final int STATUS_STOP = 2;
 	public static final int STATUS_LOADED = 3;
+	public static final int STATUS_RELOADING = 4;
 
+	private int videoStreamID = -1;
+	private int audioStreamID = -1;
+	
 	public VideoPlayer() {
 		frame = new MyVideoFrame();
 		frame.setLayout(new GridBagLayout());
@@ -85,33 +92,53 @@ public class VideoPlayer {
 		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		
+		reader.open();
+		
+		for (int i = 0; i < reader.getContainer().getNumStreams(); i++) {
+            IStream stream =  reader.getContainer().getStream(i);
+            IStreamCoder coder = stream.getStreamCoder();
+
+            if (videoStreamID == -1 && coder.getCodecType() == ICodec.Type.CODEC_TYPE_VIDEO) {
+                videoStreamID = i;
+//	                videoCoder = coder;
+            } else if (audioStreamID == -1 && coder.getCodecType() == ICodec.Type.CODEC_TYPE_AUDIO) {
+                audioStreamID = i;
+//	                audioCoder = coder;
+            }
+        }
+
+		
 		this.setStatus(VideoPlayer.STATUS_LOADED);
 		
 		this.playLoop();
 	}
 	
-	private void reload() {
+	private boolean reload() {
 		System.out.println("reload: "+this.getSourceFile());
-		if(this.getSourceFile() != null){
-			this.reader.close();
-			this.reader = null;
-			this.load(this.getSourceFile());
-		}
+		this.setStatus(VideoPlayer.STATUS_RELOADING);
+		
+		//wait 
+		try{ Thread.sleep(100); } catch(Exception e) { e.printStackTrace(); }
+		
+		this.reader.close();
+		this.reader.open();
+		this.setStatus(VideoPlayer.STATUS_LOADED);
+		return true;
 	}
 	
 	public void playLoop() {
-		if(reader != null){
-			while(true) {
+		while(true) {
+			if(this.getStatus() != VideoPlayer.STATUS_RELOADING){
 				if(this.getStatus() == VideoPlayer.STATUS_PLAY || this.getStatus() == VideoPlayer.STATUS_LOADED) {
-					if(reader.readPacket() != null) break;
+					if(this.getStatus() != VideoPlayer.STATUS_RELOADING && reader.readPacket() != null) break;
 				} else {
 					try{
 						Thread.sleep(0);
 					} catch(Exception e){
 						e.printStackTrace();
 					}
-				}
-			}
+				}	
+			} // else reader will be refreshed
 		}
 	}
 	
@@ -131,9 +158,14 @@ public class VideoPlayer {
 	
 	public boolean stop() {
 		System.out.println("stop");
-		if(this.getStatus() == VideoPlayer.STATUS_PLAY && this.getStatus() == VideoPlayer.STATUS_PAUSE) {
-			this.reload();
-			return true;
+		if(this.getStatus() == VideoPlayer.STATUS_PLAY || this.getStatus() == VideoPlayer.STATUS_PAUSE) {
+			return this.reload();
+//			System.out.println(String.format("Trying to reset video play to %d", this.reader.getContainer().getStream(videoStreamID).getStartTime()));
+//			this.reader.
+//			if(this.reader.getContainer().seekKeyFrame(videoStreamID, this.reader.getContainer().getStream(videoStreamID).getStartTime(), IContainer.SEEK_FLAG_ANY | IContainer.SEEK_FLAG_FRAME) < 0) {
+//				System.out.println(String.format("Could not reset audio play position to %d", this.reader.getContainer().getStartTime()));
+//			}
+//			return true;
 		}
 		return false;
 	}

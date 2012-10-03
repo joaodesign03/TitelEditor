@@ -1,4 +1,4 @@
-import gui.GUI;
+import seditor.Gui;
 
 
 public class MainApp {
@@ -10,7 +10,7 @@ public class MainApp {
 	 */
 	public static void main(String[] args) {
 		
-		GUI g = new GUI();
+		Gui g = new Gui();
 		g.initInterface();
 	
 
