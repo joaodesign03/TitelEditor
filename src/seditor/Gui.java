@@ -1,6 +1,7 @@
 package seditor;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -95,22 +96,20 @@ public class Gui extends JFrame  {
 		// ////
 		panel_effects = new JPanel(new GridBagLayout());
 		panel_effects.setPreferredSize(new Dimension(600, 100));
-		panel_effects.setBorder(BorderFactory.createTitledBorder("Video Effects"));
+//		panel_effects.setBorder(BorderFactory.createTitledBorder("Video Effects"));
 
 		panel_settings = new JPanel(new GridBagLayout());
 		panel_settings.setPreferredSize(new Dimension(200, 500));
-		panel_settings.setBorder(BorderFactory
-				.createTitledBorder("Text Styles"));
+//		panel_settings.setBorder(BorderFactory.createTitledBorder("Text Styles"));
 		panel_settings.setSize(400, 400);
 
 		setting_timeline = new JPanel(new GridBagLayout());
 		setting_timeline.setPreferredSize(new Dimension(600, 100));
-		setting_timeline
-				.setBorder(BorderFactory.createTitledBorder("Timeline"));
+//		setting_timeline.setBorder(BorderFactory.createTitledBorder("Timeline"));
 
 		start_panel = new JPanel(new GridBagLayout());
 		start_panel.setPreferredSize(new Dimension(600, 50));
-		start_panel.setBorder(BorderFactory.createTitledBorder("Start/Stop"));
+//		start_panel.setBorder(BorderFactory.createTitledBorder("Start/Stop"));
 
 		vid_panel = new VideoPlayer();
 
@@ -119,6 +118,7 @@ public class Gui extends JFrame  {
 		panel_video_big.add(panel_effects);
 		panel_video_big.add(vid_panel.frame);
 		panel_video_big.add(start_panel);
+		panel_video_big.setBackground(new Color(0, 0, 0));
 
 		frame.add(panel_video_big, BorderLayout.CENTER);
 		frame.add(panel_settings, BorderLayout.EAST);
@@ -134,8 +134,7 @@ public class Gui extends JFrame  {
 		nav_back.setFocusPainted(false);
 		nav_back.setBorderPainted(false);
 		nav_back.setContentAreaFilled(false);
-		nav_back.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 2)); // Especially
-																		// important
+		nav_back.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 2)); // Especially important
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -185,8 +184,7 @@ public class Gui extends JFrame  {
 		nav_forw.setFocusPainted(false);
 		nav_forw.setBorderPainted(false);
 		nav_forw.setContentAreaFilled(false);
-		nav_forw.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 2)); // Especially
-																		// important
+		nav_forw.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 2)); // Especially important
 		gbc.gridx = 5;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -199,8 +197,7 @@ public class Gui extends JFrame  {
 		nav_volume.setFocusPainted(false);
 		nav_volume.setBorderPainted(false);
 		nav_volume.setContentAreaFilled(false);
-		nav_volume.setBorder(BorderFactory.createEmptyBorder(2, 30, 10, 2)); // Especially
-																			// important
+		nav_volume.setBorder(BorderFactory.createEmptyBorder(2, 30, 10, 2)); // Especially important
 		gbc.gridx = 6;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -216,8 +213,8 @@ public class Gui extends JFrame  {
 		text_left.setFocusPainted(false);
 		text_left.setBorderPainted(false);
 		text_left.setContentAreaFilled(false);
-		text_left.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1)); // Especially
-																		// important
+		text_left.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1)); // Especially important
+		
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -230,8 +227,8 @@ public class Gui extends JFrame  {
 		text_cent.setFocusPainted(false);
 		text_cent.setBorderPainted(false);
 		text_cent.setContentAreaFilled(false);
-		text_cent.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1)); // Especially
-																		// important
+		text_cent.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1)); // Especially important
+		
 		gbc.gridx = 2;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -244,8 +241,8 @@ public class Gui extends JFrame  {
 		text_right.setFocusPainted(false);
 		text_right.setBorderPainted(false);
 		text_right.setContentAreaFilled(false);
-		text_right.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1)); // Especially
-																		// important
+		text_right.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1)); // Especially important
+		
 		gbc.gridx = 3;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -257,8 +254,7 @@ public class Gui extends JFrame  {
 		text_ital.setFocusPainted(false);
 		text_ital.setBorderPainted(false);
 		text_ital.setContentAreaFilled(false);
-		text_ital.setBorder(BorderFactory.createEmptyBorder(1, 5, 1, 1)); // Especially
-																		// important
+		text_ital.setBorder(BorderFactory.createEmptyBorder(1, 5, 1, 1)); // Especially important
 		gbc.gridx = 4;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -271,8 +267,8 @@ public class Gui extends JFrame  {
 		text_bol.setFocusPainted(false);
 		text_bol.setBorderPainted(false);
 		text_bol.setContentAreaFilled(false);
-		text_bol.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1)); // Especially
-																	// important
+		text_bol.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1)); // Especially important
+		
 		gbc.gridx = 5;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -285,8 +281,8 @@ public class Gui extends JFrame  {
 		text_under.setFocusPainted(false);
 		text_under.setBorderPainted(false);
 		text_under.setContentAreaFilled(false);
-		text_under.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1)); // Especially
-																		// important
+		text_under.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1)); // Especially important
+		
 		gbc.gridx = 6;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;

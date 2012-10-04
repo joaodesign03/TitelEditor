@@ -48,9 +48,6 @@ public class GuiListener implements ActionListener{
 				
 				playThread.start();
 
-				// videoPlayer.play(filename);
-				// this.play(filename);
-
 			} // end if.approved
 
 		} 
@@ -65,8 +62,6 @@ public class GuiListener implements ActionListener{
 				this.gui.setPaused();
 			}
 		}
-//		System.out.println("button: "+object.getSource().toString());
-		// end actionperformend-open
 
 	}// end action performed
 }
