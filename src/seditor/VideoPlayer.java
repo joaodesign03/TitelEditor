@@ -15,16 +15,21 @@ import com.xuggle.mediatool.MediaListenerAdapter;
 import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.mediatool.event.IAudioSamplesEvent;
 import com.xuggle.mediatool.event.IVideoPictureEvent;
+import com.xuggle.xuggler.Global;
 import com.xuggle.xuggler.IAudioSamples;
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
+import com.xuggle.xuggler.IVideoPicture;
 
 public class VideoPlayer {
 	public VideoFrame frame;
 	private static SourceDataLine mLine; // audio
 	private IStreamCoder audioCoder = null;
 	private IStreamCoder videoCoder = null;
+
+	private static long mFirstVideoTimestampInStream = Global.NO_PTS;
+	private static long mSystemVideoClockStartTime = 0;
 
 	// source file
 	private String sourceFile;
@@ -85,8 +90,12 @@ public class VideoPlayer {
 		try {
 			openJavaSound(audioCoder);
 		} catch (LineUnavailableException ex) {
+			System.out.println("No audio line for this video.");
 		}
 
+		
+		
+		
 		adapter = new MediaListenerAdapter() {
 			@Override
 			public void onVideoPicture(IVideoPictureEvent event) {
@@ -97,18 +106,12 @@ public class VideoPlayer {
 
 			@Override
 			public void onAudioSamples(IAudioSamplesEvent event) {
-				// event.getAudioSamples();
-
 				playJavaSound(event.getAudioSamples());
-				// IAudioSamples samples =
-				// IAudioSamples.make(1024,audioCoder.getChannels());
-
 			}
 		};
 		reader.addListener(adapter);
 
 		this.setStatus(VideoPlayer.STATUS_LOADED);
-
 		this.playLoop();
 	}
 
@@ -257,6 +260,40 @@ public class VideoPlayer {
 			mLine.close();
 			mLine = null;
 		}
+	}
+	
+	/**
+	 * 
+	 * Synchronizing Video and Audio
+	 * @param picture
+	 * @return
+	 */
+	private static long millisecondsUntilTimeToDisplay(IVideoPicture picture) {
+		long millisecondsToSleep = 0;
+		
+		if (mFirstVideoTimestampInStream == Global.NO_PTS) {
+			// This is our first time through
+			mFirstVideoTimestampInStream = picture.getTimeStamp();
+			// get the starting clock time so we can hold up frames
+			// until the right time.
+			mSystemVideoClockStartTime = System.currentTimeMillis();
+			millisecondsToSleep = 0;
+		} else {
+			long systemClockCurrentTime = System.currentTimeMillis();
+			long millisecondsClockTimeSinceStartofVideo = systemClockCurrentTime
+					- mSystemVideoClockStartTime;
+			// compute how long for this frame since the first frame in the
+			// stream.
+			// remember that IVideoPicture and IAudioSamples timestamps are
+			// always in MICROSECONDS,
+			// so we divide by 1000 to get milliseconds.
+			long millisecondsStreamTimeSinceStartOfVideo = (picture
+					.getTimeStamp() - mFirstVideoTimestampInStream) / 1000;
+			final long millisecondsTolerance = 50; // and we give ourselfs 50 ms
+													// of tolerance
+			millisecondsToSleep = (millisecondsStreamTimeSinceStartOfVideo - (millisecondsClockTimeSinceStartofVideo + millisecondsTolerance));
+		}
+		return millisecondsToSleep;
 	}
 
 }

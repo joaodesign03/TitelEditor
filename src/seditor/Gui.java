@@ -96,6 +96,7 @@ public class Gui extends JFrame  {
 		// ////
 		panel_effects = new JPanel(new GridBagLayout());
 		panel_effects.setPreferredSize(new Dimension(600, 100));
+		panel_effects.setBackground(new Color(255,255,255));
 //		panel_effects.setBorder(BorderFactory.createTitledBorder("Video Effects"));
 
 		panel_settings = new JPanel(new GridBagLayout());
@@ -108,7 +109,8 @@ public class Gui extends JFrame  {
 //		setting_timeline.setBorder(BorderFactory.createTitledBorder("Timeline"));
 
 		start_panel = new JPanel(new GridBagLayout());
-		start_panel.setPreferredSize(new Dimension(600, 50));
+		start_panel.setPreferredSize(new Dimension(600, 40));
+		start_panel.setBackground(new Color(255,255,255));
 //		start_panel.setBorder(BorderFactory.createTitledBorder("Start/Stop"));
 
 		vid_panel = new VideoPlayer();
@@ -134,7 +136,7 @@ public class Gui extends JFrame  {
 		nav_back.setFocusPainted(false);
 		nav_back.setBorderPainted(false);
 		nav_back.setContentAreaFilled(false);
-		nav_back.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 2)); // Especially important
+		nav_back.setBorder(BorderFactory.createEmptyBorder(2, 2, 0, 2)); // Especially important
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -147,7 +149,7 @@ public class Gui extends JFrame  {
 		nav_start.setFocusPainted(false);
 		nav_start.setBorderPainted(false);
 		nav_start.setContentAreaFilled(false);
-		nav_start.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 2)); // Especially important
+		nav_start.setBorder(BorderFactory.createEmptyBorder(2, 2, 0, 2)); // Especially important
 		nav_start.setActionCommand("player_start");
 		nav_start.addActionListener(guiListener);
 		
@@ -163,7 +165,7 @@ public class Gui extends JFrame  {
 		nav_stop.setFocusPainted(false);
 		nav_stop.setBorderPainted(false);
 		nav_stop.setContentAreaFilled(false);
-		nav_stop.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 2)); // Especially important
+		nav_stop.setBorder(BorderFactory.createEmptyBorder(2, 2, 0, 2)); // Especially important
 		nav_stop.setActionCommand("player_stop");
 		nav_stop.addActionListener(guiListener);
 
@@ -184,7 +186,7 @@ public class Gui extends JFrame  {
 		nav_forw.setFocusPainted(false);
 		nav_forw.setBorderPainted(false);
 		nav_forw.setContentAreaFilled(false);
-		nav_forw.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 2)); // Especially important
+		nav_forw.setBorder(BorderFactory.createEmptyBorder(2, 2, 0, 2)); // Especially important
 		gbc.gridx = 5;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
@@ -192,12 +194,12 @@ public class Gui extends JFrame  {
 		start_panel.add(nav_forw, gbc);
 
 		nav_volume = new JButton(icon_vol);
-		nav_volume.setPreferredSize(new Dimension(30, 30));
+		nav_volume.setPreferredSize(new Dimension(30, 50));
 		nav_volume.setOpaque(false);
 		nav_volume.setFocusPainted(false);
 		nav_volume.setBorderPainted(false);
 		nav_volume.setContentAreaFilled(false);
-		nav_volume.setBorder(BorderFactory.createEmptyBorder(2, 30, 10, 2)); // Especially important
+		nav_volume.setBorder(BorderFactory.createEmptyBorder(2, 30, 0, 2)); // up-left-down-right
 		gbc.gridx = 6;
 		gbc.gridy = 0;
 		gbc.gridheight = 1;
