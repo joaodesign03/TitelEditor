@@ -24,6 +24,7 @@ import com.xuggle.xuggler.IVideoPicture;
 
 public class VideoPlayer {
 	public VideoFrame frame;
+	public StaticImageMediaTool imageMediaTool;
 	private static SourceDataLine mLine; // audio
 	private IStreamCoder audioCoder = null;
 	private IStreamCoder videoCoder = null;
@@ -53,6 +54,7 @@ public class VideoPlayer {
 		// frame.setBorder(BorderFactory.createTitledBorder("Video Preview"));
 		// frame.setVisible(true);
 	}
+	
 
 	public VideoPlayer(String filename) {
 		this.load(filename);
@@ -93,9 +95,6 @@ public class VideoPlayer {
 			System.out.println("No audio line for this video.");
 		}
 
-		
-		
-		
 		adapter = new MediaListenerAdapter() {
 			@Override
 			public void onVideoPicture(IVideoPictureEvent event) {

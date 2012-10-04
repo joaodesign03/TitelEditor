@@ -11,6 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -127,7 +128,6 @@ public class Gui extends JFrame  {
 		frame.add(setting_timeline, BorderLayout.PAGE_END);
 
 		frame.setSize(800, 600);
-
 		// ////
 		// buttons video preview
 		// ////

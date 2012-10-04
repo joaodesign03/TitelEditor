@@ -58,9 +58,15 @@ public class GuiListener implements ActionListener{
 			}
 		}
 		if(object.getActionCommand() == "player_stop"){
-			if(this.gui.getVideo().stop()) {
-				this.gui.setPaused();
+			if (this.gui.getVideo().getSourceFile() == null) {
+				System.out.println("No video loaded.");
 			}
+			else {
+				if(this.gui.getVideo().stop()) {
+					this.gui.setPaused();
+				}
+			}
+			
 		}
 
 	}// end action performed
