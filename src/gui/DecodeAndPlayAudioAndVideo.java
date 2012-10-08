@@ -1,10 +1,17 @@
 package gui;
 
+import java.awt.Dimension;
+import java.awt.GridBagLayout;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+
+import seditor.VideoFrame;
+import seditor.VideoPlayer;
+
 import com.xuggle.xuggler.demos.*;
 import com.xuggle.xuggler.Global;
 import com.xuggle.xuggler.IAudioSamples;
@@ -31,10 +38,24 @@ public class DecodeAndPlayAudioAndVideo {
 	 * 
 	 */
 	public static VideoImage mScreen = null;
+	
+	public static VideoFrame frame;
 
 	private static long mSystemVideoClockStartTime;
 
 	private static long mFirstVideoTimestampInStream;
+	private String filename;
+	
+	private IContainer container;
+	private IPacket packet;
+	
+	// state const and var
+	private int status;
+	public static final int STATUS_PLAY = 0;
+	public static final int STATUS_PAUSE = 1;
+	public static final int STATUS_STOP = 2;
+	public static final int STATUS_LOADED = 3;
+	public static final int STATUS_RELOADING = 4;
 
 	/**
 	 * Takes a media container (file) as the first argument, opens it, plays
@@ -45,13 +66,22 @@ public class DecodeAndPlayAudioAndVideo {
 	 *            Must contain one string which represents a filename
 	 */
 	@SuppressWarnings("deprecation")
-	public static void main(String[] args) {
-		// if (args.length <= 0)
-		// throw new
-		// IllegalArgumentException("must pass in a filename as the first argument");
+	//public static void main(String[] args) {
+	
+	public DecodeAndPlayAudioAndVideo() {
+		frame = new VideoFrame();
+		frame.setLayout(new GridBagLayout());
+		frame.setPreferredSize(new Dimension(600, 400));
+	}
+	
+	public DecodeAndPlayAudioAndVideo(String filename) {
+		this.load(filename);
+	}
+	
+	
+	public void load(String filename) {
 
-		String filename = "/Users/johann/Movies/Falling.Skies.S02E01.HDTV.x264-ASAP.mp4";// args[0];
-
+		this.filename = filename;
 		// Let's make sure that we can actually convert video pixel formats.
 		if (!IVideoResampler
 				.isSupported(IVideoResampler.Feature.FEATURE_COLORSPACECONVERSION))
@@ -59,7 +89,7 @@ public class DecodeAndPlayAudioAndVideo {
 					"you must install the GPL version of Xuggler (with IVideoResampler support) for this demo to work");
 
 		// Create a Xuggler container object
-		IContainer container = IContainer.make();
+		container = IContainer.make();
 
 		// Open up the container
 		if (container.open(filename, IContainer.Type.READ, null) < 0)
@@ -121,7 +151,9 @@ public class DecodeAndPlayAudioAndVideo {
 			/*
 			 * And once we have that, we draw a window on screen
 			 */
-			openJavaVideo();
+			//openJavaVideo();
+			
+			
 		}
 
 		if (audioCoder != null) {
@@ -142,7 +174,8 @@ public class DecodeAndPlayAudioAndVideo {
 								+ filename);
 			}
 		}
-
+		this.setStatus(DecodeAndPlayAudioAndVideo.STATUS_LOADED);
+		this.playLoop();
 		/*
 		 * Now, we start walking through the container looking at each packet.
 		 */
@@ -211,7 +244,10 @@ public class DecodeAndPlayAudioAndVideo {
 					// And finally, convert the picture to an image and display
 					// it
 
-					mScreen.setImage(Utils.videoPictureToImage(newPic));
+					if (status == DecodeAndPlayAudioAndVideo.STATUS_LOADED)
+						status = DecodeAndPlayAudioAndVideo.STATUS_STOP;
+					frame.setImage(Utils.videoPictureToImage(newPic));
+					//mScreen.setImage(Utils.videoPictureToImage(newPic));
 				}
 			} else if (packet.getStreamIndex() == audioStreamId) {
 				/*
@@ -396,4 +432,96 @@ public class DecodeAndPlayAudioAndVideo {
 		}
 		return millisecondsToSleep;
 	}
+	
+	private boolean reload() {
+		System.out.println("reload: " + this.getSourceFile());
+		this.setStatus(VideoPlayer.STATUS_RELOADING);
+
+		// wait
+		try {
+			Thread.sleep(100);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		this.container.close();
+		this.container.open(filename, IContainer.Type.READ, null);
+		//this.reader.close();
+		//this.reader.open();
+		this.setStatus(DecodeAndPlayAudioAndVideo.STATUS_LOADED);
+		return true;
+	}
+
+	public void playLoop() {
+		while (true) {
+			if (this.getStatus() != DecodeAndPlayAudioAndVideo.STATUS_RELOADING) {
+				if (this.getStatus() == DecodeAndPlayAudioAndVideo.STATUS_PLAY
+						|| this.getStatus() == DecodeAndPlayAudioAndVideo.STATUS_LOADED) {
+					if (this.getStatus() != DecodeAndPlayAudioAndVideo.STATUS_RELOADING
+							&& this.container.readNextPacket(packet) >= 0) {
+						
+					}
+						break;
+				} else {
+					try {
+						Thread.sleep(0);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			} // else reader will be refreshed
+		}
+	}
+
+	public boolean pause() {
+		if (this.getStatus() == DecodeAndPlayAudioAndVideo.STATUS_PAUSE
+				|| this.getStatus() == DecodeAndPlayAudioAndVideo.STATUS_STOP) {
+			// System.out.println("start");
+			this.setStatus(DecodeAndPlayAudioAndVideo.STATUS_PLAY);
+			return true;
+		} else if (this.getStatus() == DecodeAndPlayAudioAndVideo.STATUS_PLAY) {
+			// System.out.println("pause");
+			this.setStatus(DecodeAndPlayAudioAndVideo.STATUS_PAUSE);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean stop() {
+		System.out.println("stop");
+		if (this.getStatus() == DecodeAndPlayAudioAndVideo.STATUS_PLAY
+				|| this.getStatus() == DecodeAndPlayAudioAndVideo.STATUS_PAUSE) {
+			return this.reload();
+			// System.out.println(String.format("Trying to reset video play to %d",
+			// this.reader.getContainer().getStream(videoStreamID).getStartTime()));
+			// this.reader.
+			// if(this.reader.getContainer().seekKeyFrame(videoStreamID,
+			// this.reader.getContainer().getStream(videoStreamID).getStartTime(),
+			// IContainer.SEEK_FLAG_ANY | IContainer.SEEK_FLAG_FRAME) < 0) {
+			// System.out.println(String.format("Could not reset audio play position to %d",
+			// this.reader.getContainer().getStartTime()));
+			// }
+			// return true;
+		}
+		return false;
+	}
+
+	// Getter Setter
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getSourceFile() {
+		return filename;
+	}
+
+	public void setSourceFile(String sourceFile) {
+		this.filename = sourceFile;
+	}
+
 }

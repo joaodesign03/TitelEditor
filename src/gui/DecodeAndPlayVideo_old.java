@@ -23,7 +23,7 @@ import com.xuggle.xuggler.demos.VideoImage;
  * @author aclarke
  *
  */
-public class DecodeAndPlayVideo
+public class DecodeAndPlayVideo_old
 {
 
   /**
@@ -41,7 +41,7 @@ public class DecodeAndPlayVideo
   //    		" as the first argument");
 
   	
-  public DecodeAndPlayVideo(String file) {
+  public DecodeAndPlayVideo_old(String file) {
 	  
     String filename = file;
 

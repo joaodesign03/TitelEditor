@@ -1,5 +1,7 @@
 package seditor;
 
+import gui.DecodeAndPlayAudioAndVideo;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,7 +26,9 @@ public class Gui extends JFrame  {
 	/**
 	 * Instantiate user interface variables
 	 */
-	VideoPlayer vid_panel;
+	VideoPlayer vid_panel = null;
+	DecodeAndPlayAudioAndVideo decode_panel;
+	
 	JFrame frame = new JFrame("Titeleditor");
 	JPanel panel_video_big, panel_effects, panel_video, panel_settings,
 			setting_timeline, start_panel;
@@ -111,15 +115,16 @@ public class Gui extends JFrame  {
 
 		start_panel = new JPanel(new GridBagLayout());
 		start_panel.setPreferredSize(new Dimension(600, 40));
-		start_panel.setBackground(new Color(255,255,255));
+		start_panel.setBackground(new Color(0,0,0));
 //		start_panel.setBorder(BorderFactory.createTitledBorder("Start/Stop"));
 
-		vid_panel = new VideoPlayer();
-
+		//vid_panel = new VideoPlayer();
+		decode_panel = new DecodeAndPlayAudioAndVideo();
+		
 		panel_video_big = new JPanel();
 		panel_video_big.setLayout(new BoxLayout(panel_video_big, BoxLayout.PAGE_AXIS));
 		panel_video_big.add(panel_effects);
-		panel_video_big.add(vid_panel.frame);
+		panel_video_big.add(decode_panel.frame);
 		panel_video_big.add(start_panel);
 		panel_video_big.setBackground(new Color(0, 0, 0));
 
@@ -297,6 +302,7 @@ public class Gui extends JFrame  {
 
 	}
 	
+	public DecodeAndPlayAudioAndVideo getDecodeVideo() { return decode_panel; }
 	public VideoPlayer getVideo() { return vid_panel; }
 	public JFrame getFrame() { return frame; }
 	

@@ -1,6 +1,8 @@
 package seditor;
 
 
+import gui.DecodeAndPlayAudioAndVideo;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -42,7 +44,8 @@ public class GuiListener implements ActionListener{
 
 				Thread playThread = new Thread() {
 					public void run() {
-						gui.getVideo().load(filename);
+						gui.getDecodeVideo().load(filename);
+						//gui.getVideo().load(filename);
 					}
 				};
 				
@@ -52,17 +55,23 @@ public class GuiListener implements ActionListener{
 
 		} 
 		if(object.getActionCommand() == "player_start"){
-			if(this.gui.getVideo().pause()){
-				if(this.gui.getVideo().getStatus() == VideoPlayer.STATUS_PAUSE) this.gui.setPaused();
-				if(this.gui.getVideo().getStatus() == VideoPlayer.STATUS_PLAY) this.gui.setPlaying();
+			//if(this.gui.getVideo().pause()){
+			//	if(this.gui.getVideo().getStatus() == VideoPlayer.STATUS_PAUSE) this.gui.setPaused();
+			//	if(this.gui.getVideo().getStatus() == VideoPlayer.STATUS_PLAY) this.gui.setPlaying();
+			if (this.gui.getDecodeVideo().pause()) {
+				if(this.gui.getDecodeVideo().getStatus() == DecodeAndPlayAudioAndVideo.STATUS_PAUSE) this.gui.setPaused();
+				if(this.gui.getDecodeVideo().getStatus() == DecodeAndPlayAudioAndVideo.STATUS_PLAY) this.gui.setPlaying();
 			}
 		}
 		if(object.getActionCommand() == "player_stop"){
-			if (this.gui.getVideo().getSourceFile() == null) {
+			//if (this.gui.getVideo().getSourceFile() == null) {
+			if(this.gui.getDecodeVideo().getSourceFile() == null) {
 				System.out.println("No video loaded.");
 			}
 			else {
-				if(this.gui.getVideo().stop()) {
+				/*if(this.gui.getVideo().stop()) {
+					this.gui.setPaused();*/
+				if(this.gui.getDecodeVideo().stop()) {
 					this.gui.setPaused();
 				}
 			}

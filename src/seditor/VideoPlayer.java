@@ -21,6 +21,7 @@ import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
 import com.xuggle.xuggler.IVideoPicture;
+import com.xuggle.xuggler.Utils;
 
 public class VideoPlayer {
 	public VideoFrame frame;
@@ -28,6 +29,7 @@ public class VideoPlayer {
 	private static SourceDataLine mLine; // audio
 	private IStreamCoder audioCoder = null;
 	private IStreamCoder videoCoder = null;
+	private IVideoPicture image = null;
 
 	private static long mFirstVideoTimestampInStream = Global.NO_PTS;
 	private static long mSystemVideoClockStartTime = 0;
@@ -54,7 +56,6 @@ public class VideoPlayer {
 		// frame.setBorder(BorderFactory.createTitledBorder("Video Preview"));
 		// frame.setVisible(true);
 	}
-	
 
 	public VideoPlayer(String filename) {
 		this.load(filename);
@@ -100,7 +101,22 @@ public class VideoPlayer {
 			public void onVideoPicture(IVideoPictureEvent event) {
 				if (status == VideoPlayer.STATUS_LOADED)
 					status = VideoPlayer.STATUS_STOP;
-				frame.setImage(event.getImage());
+				image = event.getPicture();
+				long delay = millisecondsUntilTimeToDisplay(image);
+				// if there is no audio stream; go ahead and hold up the
+				// main thread. We'll end
+				// up caching fewer video pictures in memory that way.
+				try {
+					System.out.println("DELAY: " + delay);
+					if (delay > 0) {
+						Thread.sleep(delay);
+						System.out.println("DELAY DELAY DELAY");
+					}
+				} catch (InterruptedException e) {
+					return;
+				}
+				// frame.setImage(event.getImage());
+				frame.setImage(Utils.videoPictureToImage(image));
 			}
 
 			@Override
@@ -184,8 +200,6 @@ public class VideoPlayer {
 		return false;
 	}
 
-	
-
 	// Getter Setter
 	public int getStatus() {
 		return status;
@@ -260,16 +274,17 @@ public class VideoPlayer {
 			mLine = null;
 		}
 	}
-	
+
 	/**
 	 * 
 	 * Synchronizing Video and Audio
+	 * 
 	 * @param picture
 	 * @return
 	 */
 	private static long millisecondsUntilTimeToDisplay(IVideoPicture picture) {
 		long millisecondsToSleep = 0;
-		
+
 		if (mFirstVideoTimestampInStream == Global.NO_PTS) {
 			// This is our first time through
 			mFirstVideoTimestampInStream = picture.getTimeStamp();
