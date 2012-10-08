@@ -56,7 +56,13 @@ public class DecodeAndPlayAudioAndVideo {
 	public static final int STATUS_STOP = 2;
 	public static final int STATUS_LOADED = 3;
 	public static final int STATUS_RELOADING = 4;
-
+	
+	// and iterate through the streams to find the first audio stream
+	int videoStreamId = -1;
+	IStreamCoder videoCoder = null;
+	int audioStreamId = -1;
+	IStreamCoder audioCoder = null;
+	IVideoResampler resampler = null;
 	/**
 	 * Takes a media container (file) as the first argument, opens it, plays
 	 * audio as quickly as it can, and opens up a Swing window and displays
@@ -99,11 +105,7 @@ public class DecodeAndPlayAudioAndVideo {
 		// query how many streams the call to open found
 		int numStreams = container.getNumStreams();
 
-		// and iterate through the streams to find the first audio stream
-		int videoStreamId = -1;
-		IStreamCoder videoCoder = null;
-		int audioStreamId = -1;
-		IStreamCoder audioCoder = null;
+		
 		for (int i = 0; i < numStreams; i++) {
 			// Find the stream object
 			IStream stream = container.getStream(i);
@@ -129,7 +131,7 @@ public class DecodeAndPlayAudioAndVideo {
 		 * Check if we have a video stream in this file. If so let's open up our
 		 * decoder so it can do work.
 		 */
-		IVideoResampler resampler = null;
+		
 		if (videoCoder != null) {
 			if (videoCoder.open() < 0)
 				throw new RuntimeException(
@@ -179,130 +181,11 @@ public class DecodeAndPlayAudioAndVideo {
 		/*
 		 * Now, we start walking through the container looking at each packet.
 		 */
-		IPacket packet = IPacket.make();
+		packet = IPacket.make();
 		mFirstVideoTimestampInStream = Global.NO_PTS;
 		mSystemVideoClockStartTime = 0;
 		while (container.readNextPacket(packet) >= 0) {
-			/*
-			 * Now we have a packet, let's see if it belongs to our video stream
-			 */
-			if (packet.getStreamIndex() == videoStreamId) {
-				/*
-				 * We allocate a new picture to get the data out of Xuggler
-				 */
-				IVideoPicture picture = IVideoPicture.make(
-						videoCoder.getPixelType(), videoCoder.getWidth(),
-						videoCoder.getHeight());
-
-				/*
-				 * Now, we decode the video, checking for any errors.
-				 */
-				int bytesDecoded = videoCoder.decodeVideo(picture, packet, 0);
-				if (bytesDecoded < 0)
-					throw new RuntimeException("got error decoding audio in: "
-							+ filename);
-
-				/*
-				 * Some decoders will consume data in a packet, but will not be
-				 * able to construct a full video picture yet. Therefore you
-				 * should always check if you got a complete picture from the
-				 * decoder
-				 */
-				if (picture.isComplete()) {
-					IVideoPicture newPic = picture;
-					/*
-					 * If the resampler is not null, that means we didn't get
-					 * the video in BGR24 format and need to convert it into
-					 * BGR24 format.
-					 */
-					if (resampler != null) {
-						// we must resample
-						newPic = IVideoPicture.make(
-								resampler.getOutputPixelFormat(),
-								picture.getWidth(), picture.getHeight());
-						if (resampler.resample(newPic, picture) < 0)
-							throw new RuntimeException(
-									"could not resample video from: "
-											+ filename);
-					}
-					if (newPic.getPixelType() != IPixelFormat.Type.BGR24)
-						throw new RuntimeException(
-								"could not decode video as BGR 24 bit data in: "
-										+ filename);
-
-					long delay = millisecondsUntilTimeToDisplay(newPic);
-					// if there is no audio stream; go ahead and hold up the
-					// main thread. We'll end
-					// up caching fewer video pictures in memory that way.
-					try {
-						if (delay > 0)
-							Thread.sleep(delay);
-					} catch (InterruptedException e) {
-						return;
-					}
-
-					// And finally, convert the picture to an image and display
-					// it
-
-					if (status == DecodeAndPlayAudioAndVideo.STATUS_LOADED)
-						status = DecodeAndPlayAudioAndVideo.STATUS_STOP;
-					frame.setImage(Utils.videoPictureToImage(newPic));
-					//mScreen.setImage(Utils.videoPictureToImage(newPic));
-				}
-			} else if (packet.getStreamIndex() == audioStreamId) {
-				/*
-				 * We allocate a set of samples with the same number of channels
-				 * as the coder tells us is in this buffer.
-				 * 
-				 * We also pass in a buffer size (1024 in our example), although
-				 * Xuggler will probably allocate more space than just the 1024
-				 * (it's not important why).
-				 */
-				IAudioSamples samples = IAudioSamples.make(1024,
-						audioCoder.getChannels());
-
-				/*
-				 * A packet can actually contain multiple sets of samples (or
-				 * frames of samples in audio-decoding speak). So, we may need
-				 * to call decode audio multiple times at different offsets in
-				 * the packet's data. We capture that here.
-				 */
-				int offset = 0;
-
-				/*
-				 * Keep going until we've processed all data
-				 */
-				while (offset < packet.getSize()) {
-					int bytesDecoded = audioCoder.decodeAudio(samples, packet,
-							offset);
-					if (bytesDecoded < 0)
-						throw new RuntimeException(
-								"got error decoding audio in: " + filename);
-					offset += bytesDecoded;
-					/*
-					 * Some decoder will consume data in a packet, but will not
-					 * be able to construct a full set of samples yet. Therefore
-					 * you should always check if you got a complete set of
-					 * samples from the decoder
-					 */
-					if (samples.isComplete()) {
-						// note: this call will block if Java's sound buffers
-						// fill up, and we're
-						// okay with that. That's why we have the video
-						// "sleeping" occur
-						// on another thread.
-						playJavaSound(samples);
-					}
-				}
-			} else {
-				/*
-				 * This packet isn't part of our video stream, so we just
-				 * silently drop it.
-				 */
-				do {
-				} while (false);
-			}
-
+			this.playLoop();
 		}
 		/*
 		 * Technically since we're exiting anyway, these will be cleaned up by
@@ -322,23 +205,8 @@ public class DecodeAndPlayAudioAndVideo {
 			container = null;
 		}
 		closeJavaSound();
-		closeJavaVideo();
 	}
 
-	/**
-	 * Opens a Swing window on screen.
-	 */
-	private static void openJavaVideo() {
-		mScreen = new VideoImage();
-	}
-
-	/**
-	 * Forces the swing thread to terminate; I'm sure there is a right way to do
-	 * this in swing, but this works too.
-	 */
-	private static void closeJavaVideo() {
-		System.exit(0);
-	}
 
 	private static void openJavaSound(IStreamCoder aAudioCoder)
 			throws LineUnavailableException {
@@ -433,6 +301,129 @@ public class DecodeAndPlayAudioAndVideo {
 		return millisecondsToSleep;
 	}
 	
+	private void handleVideo() {
+		/*
+		 * Now we have a packet, let's see if it belongs to our video stream
+		 */
+		if (packet.getStreamIndex() == videoStreamId) {
+			/*
+			 * We allocate a new picture to get the data out of Xuggler
+			 */
+			IVideoPicture picture = IVideoPicture.make(
+					videoCoder.getPixelType(), videoCoder.getWidth(),
+					videoCoder.getHeight());
+
+			/*
+			 * Now, we decode the video, checking for any errors.
+			 */
+			int bytesDecoded = videoCoder.decodeVideo(picture, packet, 0);
+			if (bytesDecoded < 0)
+				throw new RuntimeException("got error decoding audio in: "
+						+ filename);
+
+			/*
+			 * Some decoders will consume data in a packet, but will not be
+			 * able to construct a full video picture yet. Therefore you
+			 * should always check if you got a complete picture from the
+			 * decoder
+			 */
+			if (picture.isComplete()) {
+				IVideoPicture newPic = picture;
+				/*
+				 * If the resampler is not null, that means we didn't get
+				 * the video in BGR24 format and need to convert it into
+				 * BGR24 format.
+				 */
+				if (resampler != null) {
+					// we must resample
+					newPic = IVideoPicture.make(
+							resampler.getOutputPixelFormat(),
+							picture.getWidth(), picture.getHeight());
+					if (resampler.resample(newPic, picture) < 0)
+						throw new RuntimeException(
+								"could not resample video from: "
+										+ filename);
+				}
+				if (newPic.getPixelType() != IPixelFormat.Type.BGR24)
+					throw new RuntimeException(
+							"could not decode video as BGR 24 bit data in: "
+									+ filename);
+
+				long delay = millisecondsUntilTimeToDisplay(newPic);
+				// if there is no audio stream; go ahead and hold up the
+				// main thread. We'll end
+				// up caching fewer video pictures in memory that way.
+				try {
+					if (delay > 0)
+						Thread.sleep(delay);
+				} catch (InterruptedException e) {
+					return;
+				}
+
+				// And finally, convert the picture to an image and display
+				// it
+
+				if (status == DecodeAndPlayAudioAndVideo.STATUS_LOADED)
+					status = DecodeAndPlayAudioAndVideo.STATUS_STOP;
+				frame.setImage(Utils.videoPictureToImage(newPic));
+				//mScreen.setImage(Utils.videoPictureToImage(newPic));
+			}
+		} else if (packet.getStreamIndex() == audioStreamId) {
+			/*
+			 * We allocate a set of samples with the same number of channels
+			 * as the coder tells us is in this buffer.
+			 * 
+			 * We also pass in a buffer size (1024 in our example), although
+			 * Xuggler will probably allocate more space than just the 1024
+			 * (it's not important why).
+			 */
+			IAudioSamples samples = IAudioSamples.make(1024,
+					audioCoder.getChannels());
+
+			/*
+			 * A packet can actually contain multiple sets of samples (or
+			 * frames of samples in audio-decoding speak). So, we may need
+			 * to call decode audio multiple times at different offsets in
+			 * the packet's data. We capture that here.
+			 */
+			int offset = 0;
+
+			/*
+			 * Keep going until we've processed all data
+			 */
+			while (offset < packet.getSize()) {
+				int bytesDecoded = audioCoder.decodeAudio(samples, packet,
+						offset);
+				if (bytesDecoded < 0)
+					throw new RuntimeException(
+							"got error decoding audio in: " + filename);
+				offset += bytesDecoded;
+				/*
+				 * Some decoder will consume data in a packet, but will not
+				 * be able to construct a full set of samples yet. Therefore
+				 * you should always check if you got a complete set of
+				 * samples from the decoder
+				 */
+				if (samples.isComplete()) {
+					// note: this call will block if Java's sound buffers
+					// fill up, and we're
+					// okay with that. That's why we have the video
+					// "sleeping" occur
+					// on another thread.
+					playJavaSound(samples);
+				}
+			}
+		} else {
+			/*
+			 * This packet isn't part of our video stream, so we just
+			 * silently drop it.
+			 */
+			do {
+			} while (false);
+		}
+	}
+	
+	
 	private boolean reload() {
 		System.out.println("reload: " + this.getSourceFile());
 		this.setStatus(VideoPlayer.STATUS_RELOADING);
@@ -459,7 +450,7 @@ public class DecodeAndPlayAudioAndVideo {
 						|| this.getStatus() == DecodeAndPlayAudioAndVideo.STATUS_LOADED) {
 					if (this.getStatus() != DecodeAndPlayAudioAndVideo.STATUS_RELOADING
 							&& this.container.readNextPacket(packet) >= 0) {
-						
+						handleVideo();
 					}
 						break;
 				} else {
@@ -493,16 +484,6 @@ public class DecodeAndPlayAudioAndVideo {
 		if (this.getStatus() == DecodeAndPlayAudioAndVideo.STATUS_PLAY
 				|| this.getStatus() == DecodeAndPlayAudioAndVideo.STATUS_PAUSE) {
 			return this.reload();
-			// System.out.println(String.format("Trying to reset video play to %d",
-			// this.reader.getContainer().getStream(videoStreamID).getStartTime()));
-			// this.reader.
-			// if(this.reader.getContainer().seekKeyFrame(videoStreamID,
-			// this.reader.getContainer().getStream(videoStreamID).getStartTime(),
-			// IContainer.SEEK_FLAG_ANY | IContainer.SEEK_FLAG_FRAME) < 0) {
-			// System.out.println(String.format("Could not reset audio play position to %d",
-			// this.reader.getContainer().getStartTime()));
-			// }
-			// return true;
 		}
 		return false;
 	}
